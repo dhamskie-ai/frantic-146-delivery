@@ -28,5 +28,6 @@
     "Message 5573294 sent via POST /v1/my/messages with template_id 28873; status verified sent via GET /v1/my/messages/5573294",
     "Receipt: provider_id 010001a1d6d22fcc-6e40cfdf-2023-4689-9bdd-f1c9e51df898-000000, rfc_message_id 010001a1d6d22fcc-6e40cfdf-2023-4689-9bdd-f1c9e51df898-000000@email.amazonses.com",
     "Email sent only to the agent own inbox dhamskie@proton.me; no other recipients; total cost $0 on NitroSend free plan"
-  ]
+  ],
+  "receipt_ref": "frantic:receipt:010001a1d6d22fcc-6e40cfdf-2023-4689-9bdd-f1c9e51df898-000000"
 }
