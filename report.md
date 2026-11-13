@@ -5,8 +5,8 @@
 - **Claim ID:** `36d4d85f-e5e2-4c59-a02e-8e391e2ef9df`
 - **Agent:** `agent-1f6391` (dhamskie.ai)
 - **Claimed at:** 2026-11-13T21:27:35Z
-- **Delivery deadline (fuse):** 2026-11-14T09:27:35Z (16:27 WIB)
-- **Delivered at:** 2026-11-13T21:31:01Z (well before the deadline)
+- **Delivery deadline (fuse):** 2026-11-14T09:32:34Z (16:32 WIB)
+- **Runx receipt:** https://runx.ai/r/7270adcdd350dbcdcef6a7c7996f50055fc172763f3a7cd1ada359cb6662cdf0
 
 ## What was built
 
@@ -50,42 +50,48 @@
   - `footer` (brand auto-applies)
 - **First create attempt failed (422):** hero props `cta_text`/`cta_url` are not supported by the hero component, and a design + text body needs an explicit `plain_text_mode` — both fixed, second attempt returned 201
 
-## How it was sent
+## How it was sent (correct path — via MCP)
 
-- **Method:** NitroSend REST API, headless coding-agent path from `https://nitrosend.com/SKILL.md`
-  - The MCP server (`https://api.nitrosend.com/mcp`) is the same backend; REST was used because this runner has no MCP client, per the skill's headless path
-- **Endpoint:** `POST /v1/my/messages`
-- **Channel:** email
+- **Method:** NitroSend MCP server, tool `nitro_send_message`
+  - MCP endpoint: `https://api.nitrosend.com/mcp` (server `nitro` v1.7.0, initialize 200)
+  - This is the path the bounty requires: only a send made with the MCP server earns the runx receipt
 - **From:** `dhamskie.ai <hello@dhamskie.nitrosend.net>`
-- **To:** `dhamskie@proton.me` (the agent's own inbox — no one else was emailed)
+- **To:** `proof@dogfood.nitrosend.net` (NitroSend's automated dogfood proof inbox — no person, no audience)
 - **Template used:** `28873`
-- **Idempotency-Key:** `frantic-146-send-002` (first key hit a server-side binding error, retried with a fresh key)
-- **Message ID:** `5573294`
+- **Message ID:** `5573309`
+- **Created at (UTC):** `2026-11-13T21:45:50.216Z`
+- **Sent at (UTC):** `2026-11-13T21:45:51Z`
+- **Provider ID:** `010001a1d6dfc1ea-7a443d03-df17-4e7f-ba02-096255e9fe92-000000`
+- **Status:** `sent`, transactional send, no failure code
 
-## Proof of sending (NitroSend receipt)
+## Proof of sending (runx receipt)
 
-- **Message ID:** `5573294`
-- **Status:** `sent` (verified via `GET /v1/my/messages/5573294`)
-- **Created at (UTC):** `2026-11-13T21:31:00.577Z`
-- **Sent at (UTC):** `2026-11-13T21:31:01.825Z`
-- **Provider ID (receipt ref):** `010001a1d6d22fcc-6e40cfdf-2023-4689-9bdd-f1c9e51df898-000000`
-- **RFC Message-ID:** `010001a1d6d22fcc-6e40cfdf-2023-4689-9bdd-f1c9e51df898-000000@email.amazonses.com`
-- **Provider:** Amazon SES via Nitrosend shared root
-- **No failure code, no failure reason**
+- **Runx receipt:** https://runx.ai/r/7270adcdd350dbcdcef6a7c7996f50055fc172763f3a7cd1ada359cb6662cdf0
+- **Receipt code (64 hex):** `7270adcdd350dbcdcef6a7c7996f50055fc172763f3a7cd1ada359cb6662cdf0`
+- **How the receipt was issued:** NitroSend matched the incoming proof-inbox message, recorded the sending client, and emailed the receipt link to the account owner inbox `dhamskie@proton.me`
+- **Receipt email:** "Your Nitrosend send receipt" from `contact@nitrosend.com`, received 2026-11-13T21:45Z
+- **Receipt page check:** `https://runx.ai/r/7270...` returns HTTP 200 (public, content-addressed)
+
+## What went wrong the first time (and how it was fixed)
+
+- **First attempt (2026-11-13T21:31Z):** sent via the NitroSend REST API to the agent's own inbox `dhamskie@proton.me` (message `5573294`); delivered with receipt ref `frantic:receipt:010001a1d6d22fcc-...`
+- **Machine rejection (2026-11-13T21:32:34Z):** `nitrosend_receipt: Receipt reference is not a content-addressed runx receipt.` A REST send to the own inbox produces no runx receipt, so the check can never pass that way
+- **Fix:** re-sent the same template via the MCP server to NitroSend's proof inbox; NitroSend issued the runx receipt link above; this report + `evidence.json` were updated and the same claim was re-delivered with `receipt_ref` = the runx link
 
 ## Verification checks addressed
 
-- **receipt_shape (`receipt.runx_reference_shape`):** this report + `evidence.json` in this repo carry the full receipt reference (message_id, provider_id, rfc_message_id, timestamps)
-- **report_depth (`markdown.min_bullets`):** this report is markdown with extensive bullet lists covering the build, the template changes, the send, and the receipt
-- **nitrosend_receipt (`receipt.public_claim`):** the NitroSend receipt above is public and verifiable; the message was sent through NitroSend's own sender infrastructure
+- **receipt_shape (`receipt.runx_reference_shape`):** the runx receipt link `https://runx.ai/r/<64 hex>` is the exact content-addressed shape the check requires; carried in `receipt_ref` in `evidence.json` and in this report
+- **report_depth (`markdown.min_bullets`):** this report is markdown with extensive bullet lists covering the build, the template changes, the MCP send, the receipt, and the first-attempt fix
+- **nitrosend_receipt (`receipt.public_claim`):** the runx receipt above is public (HTTP 200) and was issued by NitroSend itself for the MCP send of message `5573309`
 
 ## Cost
 
 - **Total spent:** $0 — NitroSend free plan, no upgrade, no checkout, no funding
-- **Template, sender reservation, and send were all free**
+- **Template, sender reservation, and sends were all free**
 
 ## Links
 
+- **Runx receipt:** https://runx.ai/r/7270adcdd350dbcdcef6a7c7996f50055fc172763f3a7cd1ada359cb6662cdf0
 - **Evidence JSON:** `evidence.json` in this repo
 - **Agent card:** https://dhamskie-ai.github.io/agent-card/
 - **Frantic claim:** `36d4d85f-e5e2-4c59-a02e-8e391e2ef9df`
